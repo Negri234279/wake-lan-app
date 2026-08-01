@@ -1,17 +1,132 @@
 ---
+import Layout from '../layouts/Layout.astro';
 
+// MOCK de Fase 4 (solo visual) para revisar el estilado. Datos hardcodeados.
+type Status = 'encendido' | 'apagado' | 'comprobando' | 'arrancando' | 'desconocido';
+
+const devices: {
+  name: string;
+  ip: string | null;
+  mac: string;
+  status: Status;
+  boot?: string;
+}[] = [
+  { name: 'Servidor-NAS', ip: '192.168.1.10', mac: 'AA:BB:CC:DD:EE:01', status: 'encendido' },
+  { name: 'Torre-Gaming', ip: '192.168.1.24', mac: 'AA:BB:CC:DD:EE:02', status: 'apagado' },
+  { name: 'Media-Center', ip: '192.168.1.31', mac: 'AA:BB:CC:DD:EE:03', status: 'comprobando' },
+  { name: 'Render-Node', ip: '192.168.1.24', mac: 'AA:BB:CC:DD:EE:04', status: 'arrancando', boot: '0:14' },
+  { name: 'Impresora-3D', ip: null, mac: 'AA:BB:CC:DD:EE:05', status: 'desconocido' },
+];
+
+const statusMeta: Record<Status, { label: string; glyph: string; color: string }> = {
+  encendido: { label: 'Encendido', glyph: '●', color: 'text-on' },
+  apagado: { label: 'Apagado', glyph: '○', color: 'text-off' },
+  comprobando: { label: 'Comprobando', glyph: '~', color: 'text-checking' },
+  arrancando: { label: 'Arrancando', glyph: '⚡', color: 'text-boot' },
+  desconocido: { label: 'Desconocido', glyph: '⊘', color: 'text-unknown' },
+};
+
+const cardGlow: Record<Status, string> = {
+  encendido: 'shadow-glow-on border-transparent',
+  apagado: 'border-border',
+  comprobando: 'glow-checking border-transparent',
+  arrancando: 'shadow-glow-boot border-transparent',
+  desconocido: 'border-border opacity-90',
+};
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="WakeLAN">
+  <main class="mx-auto max-w-6xl px-4 py-8">
+    <!-- Header -->
+    <header class="flex items-center justify-between">
+      <h1 class="flex items-center gap-2 text-lg font-semibold tracking-tight">
+        <span class="text-on drop-shadow-[0_0_8px_var(--color-on)]">◉</span>
+        WakeLAN
+      </h1>
+      <div class="flex items-center gap-2">
+        <button
+          class="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text-muted transition hover:text-text hover:border-text-muted"
+        >
+          ⟳ Refrescar
+        </button>
+        <button
+          class="rounded-lg border border-on/40 bg-on/10 px-3 py-2 text-sm font-medium text-on transition hover:bg-on/20 hover:shadow-glow-on"
+        >
+          + Añadir equipo
+        </button>
+      </div>
+    </header>
+
+    <!-- Título + resumen -->
+    <div class="mt-8 flex items-end justify-between">
+      <div>
+        <h2 class="text-xl font-semibold">Equipos</h2>
+        <p class="mt-1 text-sm text-text-muted">Última comprobación: hace 12 s</p>
+      </div>
+      <p class="text-sm text-text-muted">
+        <span class="text-on">1 encendido</span> · <span class="text-off">1 apagado</span>
+      </p>
+    </div>
+
+    <!-- Grid de cards -->
+    <section class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        devices.map((d) => {
+          const meta = statusMeta[d.status];
+          return (
+            <article
+              class={`group relative flex flex-col rounded-[var(--radius-card)] border bg-surface p-5 transition ${cardGlow[d.status]}`}
+            >
+              {/* Top: pill de estado + overflow */}
+              <div class="flex items-center justify-between">
+                <span class={`flex items-center gap-1.5 text-xs font-medium ${meta.color}`}>
+                  <span aria-hidden="true">{meta.glyph}</span>
+                  {meta.label}
+                </span>
+                <button
+                  class="rounded-md px-1.5 text-text-muted transition hover:bg-surface-2 hover:text-text"
+                  aria-label={`Acciones para ${d.name}`}
+                >
+                  ⋯
+                </button>
+              </div>
+
+              {/* Identidad */}
+              <h3 class="mt-3 text-base font-semibold text-text">{d.name}</h3>
+              <p class="mt-0.5 font-mono text-sm text-text-muted">{d.ip ?? 'Sin IP'}</p>
+              {d.status === 'arrancando' ? (
+                <p class="mt-0.5 font-mono text-xs text-boot">Paquete enviado · {d.boot} · esperando</p>
+              ) : (
+                <p class="mt-0.5 font-mono text-xs text-text-muted/60">{d.mac}</p>
+              )}
+
+              {/* Acción */}
+              <div class="mt-4">
+                {d.status === 'encendido' ? (
+                  <button
+                    disabled
+                    class="w-full cursor-default rounded-lg border border-on/30 bg-on/5 px-4 py-2 text-sm font-medium text-on/70"
+                  >
+                    ✓ Encendido
+                  </button>
+                ) : d.status === 'arrancando' ? (
+                  <button class="w-full rounded-lg border border-border px-4 py-2 text-sm text-text-muted transition hover:text-text">
+                    Reintentar
+                  </button>
+                ) : (
+                  <button class="w-full rounded-lg border border-boot/40 bg-boot/10 px-4 py-2 text-sm font-medium text-boot transition hover:bg-boot/20 hover:shadow-glow-boot">
+                    ⚡ Encender
+                  </button>
+                )}
+              </div>
+
+              {d.status === 'desconocido' && (
+                <p class="mt-2 text-xs text-unknown">No se puede comprobar el estado</p>
+              )}
+            </article>
+          );
+        })
+      }
+    </section>
+  </main>
+</Layout>
