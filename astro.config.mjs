@@ -1,20 +1,20 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig } from 'astro/config'
 
-import preact from '@astrojs/preact';
-import node from '@astrojs/node';
+import preact from '@astrojs/preact'
+import node from '@astrojs/node'
 
-import tailwindcss from '@tailwindcss/vite';
+import tailwindcss from '@tailwindcss/vite'
 
 // https://astro.build/config
 export default defineConfig({
-  // SSR: la lógica de red (Wake-on-LAN, sondeo de estado) corre en el servidor Node.
-  output: 'server',
-  adapter: node({ mode: 'standalone' }),
+    // SSR: la lógica de red (Wake-on-LAN, sondeo de estado) corre en el servidor Node.
+    output: 'server',
+    adapter: node({ mode: 'standalone' }),
 
-  integrations: [preact()],
+    integrations: [preact()],
 
-  vite: {
-    plugins: [tailwindcss()]
-  }
-});
+    vite: {
+        plugins: [tailwindcss()],
+    },
+})

@@ -17,6 +17,10 @@ pnpm-debug.log*
 .env
 .env.production
 
+# app data (persisted device list — se monta como volumen en Docker)
+data/devices.json
+data/devices.json.tmp
+
 # macOS-specific files
 .DS_Store
 

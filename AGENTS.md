@@ -16,6 +16,43 @@ con almacenamiento mínimo en un fichero JSON.
   y las skills de diseño frontend (`design-taste-frontend`, `high-end-visual-design`).
   Diseñar la UI **antes** de implementarla.
 
+## Normas de código (clean code)
+
+Aplican a todo el código nuevo. El formateo lo garantiza **Prettier**; estas normas
+cubren estructura y estilo que Prettier no impone.
+
+**Estructura / archivos**
+
+- Un archivo, una responsabilidad. Extraer a archivos propios los errores, utilidades,
+  constantes y cualquier cosa que no sea la función principal del archivo.
+- Errores en `src/server/errors/` (una clase por archivo, barrel en `index.ts`).
+- Validaciones divididas por unidad (`src/server/validation/{mac,ip,device}.ts`).
+- Constantes/metadata de presentación del front en `src/lib/` (p. ej. `device-status.ts`).
+
+**Control de flujo**
+
+- `if` en una sola línea SOLO cuando el cuerpo es un `return` (guard clause):
+  `if (!value) return null`.
+- Cualquier otro `if` con cuerpo, `else`, `for` y bucles: siempre en bloque multilínea
+  con llaves. Nunca en una sola línea.
+- Preferir guard clauses y salidas tempranas frente al anidamiento.
+
+**Objetos**
+
+- Objetos literales nunca en una sola línea: una propiedad por línea, con trailing comma.
+
+**Front (Astro + Preact)**
+
+- Componentes atómicos: una única responsabilidad y la lógica mínima en cada uno.
+- Toda la lógica de estado de las islas Preact (`useState`, `useEffect`, etc.) se extrae
+  a **custom hooks** (`useXxx`) para mantener el componente declarativo.
+
+**Formateo**
+
+- Prettier 3 con `prettier-plugin-astro` y `prettier-plugin-tailwindcss`. Config en
+  `.prettierrc` (4 espacios, sin `;`, comillas simples, `trailingComma: all`, printWidth 120).
+- Ejecutar `npx prettier --write` al terminar cualquier cambio.
+
 ## Stack
 
 - **Astro 7** (`^7.1.6`) con **SSR** para toda la lógica de backend.
@@ -24,10 +61,10 @@ con almacenamiento mínimo en un fichero JSON.
 - **Tailwind CSS 4** vía `@tailwindcss/vite` (no PostCSS, no `tailwind.config`
   clásico; configuración con `@theme` en CSS).
 - **Node 22+** (`engines.node >= 22.12.0`).
-- Adaptador SSR: **`@astrojs/node`** en modo `standalone` (necesario para Docker).
-  > Pendiente de instalar/configurar: añadir `output: 'server'` y el adaptador en
-  > `astro.config.mjs`. El acceso a la red local (UDP broadcast, sockets) requiere
-  > que el backend corra en Node en el servidor, no en edge.
+- Adaptador SSR: **`@astrojs/node`** en modo `standalone` (ya configurado con
+  `output: 'server'` en `astro.config.mjs`). El acceso a la red local (UDP broadcast,
+  sockets) requiere que el backend corra en Node en el servidor, no en edge.
+- **Prettier** con plugins de Astro y Tailwind para el formateo (ver "Normas de código").
 
 ## Arquitectura
 
