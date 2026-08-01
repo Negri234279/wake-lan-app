@@ -83,6 +83,27 @@ Endpoints SSR de Astro (src/pages/api/*.ts)   ← toda la lógica de red vive aq
   Nunca en el cliente.
 - Los componentes Preact son islas hidratadas que llaman a los endpoints por `fetch`.
 
+## API (SSR)
+
+Rutas en `src/pages/api/`. Todas devuelven JSON. El mapeo de errores vive en
+`src/server/http/error-response.ts` (`ValidationError` → 400 con `fields`,
+`NotFoundError` → 404, resto → 500).
+
+| Método | Ruta                       | Descripción                              |
+| ------ | -------------------------- | ---------------------------------------- |
+| GET    | `/api/devices`             | Lista de equipos.                        |
+| POST   | `/api/devices`             | Crea un equipo.                          |
+| PATCH  | `/api/devices/:id`         | Edita un equipo.                         |
+| DELETE | `/api/devices/:id`         | Elimina un equipo.                       |
+| POST   | `/api/devices/:id/wake`    | Envía el magic packet (Wake-on-LAN).     |
+| GET    | `/api/devices/:id/status`  | Estado de un equipo.                     |
+| GET    | `/api/status`              | Estado de toda la flota (para el polling).|
+
+> **CSRF**: Astro protege los métodos que mutan (`checkOrigin`, activo por defecto en
+> SSR). El front debe llamarlos con `fetch` desde el mismo origen — el navegador envía
+> el header `Origin` automáticamente. Las peticiones con `content-type: application/json`
+> también lo superan.
+
 ## Modelo de datos
 
 Almacenamiento en un único fichero JSON (p. ej. `data/devices.json`), montado como
