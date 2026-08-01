@@ -81,6 +81,10 @@ export function wakeDevice(id: string): Promise<void> {
     })
 }
 
+export function fetchDeviceStatus(id: string): Promise<DeviceStatusEntry> {
+    return request<DeviceStatusEntry>(`/api/devices/${id}/status`)
+}
+
 export function fetchFleetStatus(): Promise<DeviceStatusEntry[]> {
     return request<DeviceStatusEntry[]>('/api/status')
 }

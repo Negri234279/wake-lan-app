@@ -24,7 +24,7 @@ interface Props {
 /** Isla raíz del dashboard: orquesta datos, sondeo, wake y diálogos. */
 export function Dashboard({ initialDevices }: Props) {
     const devices = useDevices(initialDevices)
-    const polling = useStatusPolling()
+    const polling = useStatusPolling(devices.devices)
     const wake = useWake()
     const toasts = useToasts()
     const dialogs = useDeviceDialogs()

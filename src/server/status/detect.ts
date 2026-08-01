@@ -5,13 +5,13 @@ import { probeIcmp } from './icmp'
 
 /**
  * Determina si un host está alcanzable combinando sondeo TCP + ICMP.
- * Está "arriba" si responde cualquiera de los sondeos.
+ * Resuelve `true` en cuanto CUALQUIER sondeo responde (early-out), sin esperar
+ * al resto; solo devuelve `false` cuando todos han fallado o expirado.
  */
-export async function isReachable(host: string, timeoutMs: number = PROBE_TIMEOUT_MS): Promise<boolean> {
+export function isReachable(host: string, timeoutMs: number = PROBE_TIMEOUT_MS): Promise<boolean> {
     const probes = [probeIcmp(host, timeoutMs), ...PROBE_PORTS.map((port) => probeTcpPort(host, port, timeoutMs))]
-    const results = await Promise.all(probes.map(toSafeBoolean))
 
-    return results.some((reachable) => reachable)
+    return anyResolvesTrue(probes)
 }
 
 /**
@@ -27,10 +27,31 @@ export async function resolveDeviceStatus(device: Device): Promise<DeviceStatus>
     return reachable ? 'encendido' : 'apagado'
 }
 
-async function toSafeBoolean(probe: Promise<boolean>): Promise<boolean> {
-    try {
-        return await probe
-    } catch {
-        return false
-    }
+/** Resuelve `true` al primer sondeo exitoso; `false` solo si todos fallan. */
+function anyResolvesTrue(probes: Promise<boolean>[]): Promise<boolean> {
+    return new Promise((resolve) => {
+        let remaining = probes.length
+
+        if (remaining === 0) {
+            resolve(false)
+            return
+        }
+
+        const settle = (reachable: boolean) => {
+            if (reachable) {
+                resolve(true)
+                return
+            }
+
+            remaining -= 1
+
+            if (remaining === 0) {
+                resolve(false)
+            }
+        }
+
+        for (const probe of probes) {
+            probe.then(settle, () => settle(false))
+        }
+    })
 }

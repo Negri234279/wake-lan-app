@@ -1,34 +1,57 @@
-import { useCallback, useEffect, useState } from 'preact/hooks'
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
 
-import type { DeviceStatus, DeviceStatusEntry } from '../server/types'
-import { fetchFleetStatus } from '../lib/api'
+import type { Device, DeviceStatus } from '../server/types'
+import { fetchDeviceStatus } from '../lib/api'
 
 const POLL_INTERVAL_MS = 12000
 
 export type StatusMap = Record<string, DeviceStatus>
 
 /**
- * Sondea el estado de toda la flota cada `POLL_INTERVAL_MS` y bajo demanda.
- * Se pausa cuando la pestaña está oculta para no malgastar sondeos.
+ * Sondea el estado de la flota cada `POLL_INTERVAL_MS` y bajo demanda, pero de
+ * forma INDEPENDIENTE por equipo: cada card se actualiza en cuanto llega su
+ * propia respuesta, sin esperar al resto. Se pausa con la pestaña oculta.
  */
-export function useStatusPolling() {
+export function useStatusPolling(devices: Device[]) {
     const [statuses, setStatuses] = useState<StatusMap>({})
     const [checking, setChecking] = useState(false)
     const [failed, setFailed] = useState(false)
 
-    const poll = useCallback(async () => {
-        setChecking(true)
+    // Ref para que `poll` (identidad estable) lea siempre la lista actual.
+    const devicesRef = useRef(devices)
+    devicesRef.current = devices
 
+    const pollOne = useCallback(async (id: string): Promise<boolean> => {
         try {
-            const entries = await fetchFleetStatus()
-            setStatuses(toStatusMap(entries))
-            setFailed(false)
+            const entry = await fetchDeviceStatus(id)
+
+            setStatuses((current) => ({
+                ...current,
+                [id]: entry.status,
+            }))
+
+            return true
         } catch {
-            setFailed(true)
-        } finally {
-            setChecking(false)
+            return false
         }
     }, [])
+
+    const poll = useCallback(async () => {
+        const list = devicesRef.current
+
+        if (list.length === 0) {
+            setChecking(false)
+            return
+        }
+
+        setChecking(true)
+
+        const results = await Promise.all(list.map((device) => pollOne(device.id)))
+
+        setChecking(false)
+        
+        setFailed(results.every((ok) => !ok))
+    }, [pollOne])
 
     useEffect(() => {
         poll()
@@ -48,14 +71,4 @@ export function useStatusPolling() {
         failed,
         poll,
     }
-}
-
-function toStatusMap(entries: DeviceStatusEntry[]): StatusMap {
-    const map: StatusMap = {}
-
-    for (const entry of entries) {
-        map[entry.id] = entry.status
-    }
-
-    return map
 }
