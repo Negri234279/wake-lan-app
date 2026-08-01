@@ -1,17 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import AppHeader from '../components/AppHeader.astro'
-import DashboardSummary from '../components/DashboardSummary.astro'
-import DeviceGrid from '../components/DeviceGrid.astro'
-import { MOCK_DEVICES } from '../lib/mock-devices'
+import { Dashboard } from '../components/Dashboard'
+import { listDevices } from '../server/store'
 
-// Vista de estilado (Fase 4 pendiente): compone el dashboard con datos mock.
+// SSR: carga inicial de equipos; la isla Preact toma el relevo en cliente.
+const devices = await listDevices()
 ---
 
 <Layout title="WakeLAN">
     <main class="mx-auto max-w-6xl px-4 py-8">
-        <AppHeader />
-        <DashboardSummary onCount={1} offCount={1} lastChecked="hace 12 s" />
-        <DeviceGrid devices={MOCK_DEVICES} />
+        <Dashboard client:load initialDevices={devices} />
     </main>
 </Layout>

@@ -1,5 +1,15 @@
 import type { DeviceStatus } from '../server/types'
 
+/**
+ * Combina el estado sondeado con la fase de arranque para obtener el estado a
+ * mostrar en la card. Prioridad: arrancando > sondeado > comprobando (sin dato).
+ */
+export function resolveDisplayStatus(polled: DeviceStatus | undefined, booting: boolean): DeviceStatus {
+    if (booting) return 'arrancando'
+
+    return polled ?? 'comprobando'
+}
+
 /** Presentación de cada estado: etiqueta, glifo, color de texto y clases de glow. */
 export interface StatusMeta {
     label: string
