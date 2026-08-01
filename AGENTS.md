@@ -170,16 +170,26 @@ Gestionar el servidor con `astro dev stop`, `astro dev status` y `astro dev logs
 
 ## Docker
 
-App **dockerizada** con build **multi-stage** y tres perfiles: **dev**, **staging** y
-**prod**.
+App **dockerizada** con `Dockerfile` **multi-stage** y `docker-compose.yml` con tres
+perfiles: **dev**, **staging** y **prod**.
 
-- Build multi-stage: etapa de dependencias → build de Astro → imagen final de runtime
-  ligera con Node 22 (solo `dist/` + `node_modules` de producción).
-- El servidor SSR corre con el adaptador `@astrojs/node` (standalone).
-- El JSON de datos se monta como **volumen** para que persista entre despliegues.
-- Consideraciones de red para WoL/ICMP en contenedor: el broadcast UDP y el ping ICMP
-  pueden requerir `network_mode: host` o capacidad `NET_RAW` / `NET_ADMIN` según el
-  entorno. Documentar en el compose de cada perfil.
+```
+docker compose --profile dev up --build          # o: npm run docker:dev
+docker compose --profile staging up --build -d    # o: npm run docker:staging (PORT 4322)
+docker compose --profile prod up --build -d        # o: npm run docker:prod   (PORT 4321)
+```
+
+- **Etapas** del `Dockerfile`: `base` (Node 22 Alpine + `iputils`) → `deps` (deps
+  completas) → `build` (Astro) → `prod-deps` (`npm ci --omit=dev`) → `runtime` (imagen
+  final: `dist/` + node_modules de prod, arranca `node ./dist/server/entry.mjs`) y `dev`
+  (hot reload con el código montado por volumen).
+- El servidor SSR corre con `@astrojs/node` standalone, escuchando en `HOST`/`PORT`.
+- El JSON de datos vive en el volumen **`/data`** (`DATA_FILE=/data/devices.json`),
+  persistente entre despliegues (un volumen por perfil).
+- **`network_mode: host`** es imprescindible: el broadcast UDP de WoL y el ping ICMP
+  deben salir a la LAN real. Requiere **host Linux** (en Docker Desktop de Windows/Mac la
+  red host es limitada). `iputils` aporta el `ping` con soporte de `-W` usado por el
+  sondeo; el contenedor corre como root para el socket ICMP.
 
 ## Documentación
 

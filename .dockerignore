@@ -1,0 +1,27 @@
+# dependencias e artefactos (se generan dentro del build)
+node_modules
+dist
+.astro
+
+# datos locales (persisten en el volumen /data, no en la imagen)
+data
+
+# git y metadatos
+.git
+.gitignore
+.github
+
+# documentación y config de editor
+*.md
+.vscode
+.idea
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# entorno
+.env
+.env.*

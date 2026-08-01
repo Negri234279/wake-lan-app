@@ -9,9 +9,13 @@
         "dev": "astro dev",
         "build": "astro build",
         "preview": "astro preview",
+        "start": "node ./dist/server/entry.mjs",
         "astro": "astro",
         "format": "prettier --write .",
-        "format:check": "prettier --check ."
+        "format:check": "prettier --check .",
+        "docker:dev": "docker compose --profile dev up --build",
+        "docker:staging": "docker compose --profile staging up --build -d",
+        "docker:prod": "docker compose --profile prod up --build -d"
     },
     "dependencies": {
         "@astrojs/node": "11.0.3",
