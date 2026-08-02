@@ -1,0 +1,28 @@
+# Perfiles: dev, staging, prod. Ejecuta uno con:
+#   docker compose --profile dev up --build
+#   docker compose --profile staging up --build -d
+#   docker compose --profile prod up --build -d
+#
+# network_mode: host es imprescindible para que el broadcast UDP de Wake-on-LAN
+# y el ping ICMP salgan a la LAN real. Requiere un host Linux (en Docker Desktop
+# de Windows/Mac la red host es limitada). Con red host, el mapeo de puertos se
+# ignora: la app escucha directamente en el PORT indicado del host.
+
+services:
+  dev:
+    container_name: wake-lan-app-dev
+    build:
+      context: .
+      target: dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - wol-data-dev:/data
+    environment:
+      - NODE_ENV=development
+      - DATA_FILE=/data/devices.json
+    network_mode: host
+    profiles: [ 'dev' ]
+
+volumes:
+  wol-data-dev:
