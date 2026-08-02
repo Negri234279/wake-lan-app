@@ -22,11 +22,11 @@ export function errorResponse(error: unknown): Response {
         )
     }
 
-    console.error('Error no controlado en la API:', error)
+    console.error('Unhandled API error:', error)
 
     return json(
         {
-            error: 'Error interno del servidor.',
+            error: 'Internal server error.',
         },
         500,
     )

@@ -26,7 +26,7 @@ export function OverflowMenu({ deviceName, onEdit, onDelete }: Props) {
                 onClick={menu.toggle}
                 aria-haspopup="menu"
                 aria-expanded={menu.isOpen}
-                aria-label={`Acciones para ${deviceName}`}
+                aria-label={`Actions for ${deviceName}`}
                 class="text-text-muted hover:bg-surface-2 hover:text-text rounded-md px-1.5 transition"
             >
                 ⋯
@@ -50,14 +50,14 @@ export function OverflowMenu({ deviceName, onEdit, onDelete }: Props) {
                             onClick={handleEdit}
                             class="text-text hover:bg-surface flex w-full items-center gap-2 px-3 py-2 text-left text-sm"
                         >
-                            ✎ Editar
+                            ✎ Edit
                         </button>
                         <button
                             role="menuitem"
                             onClick={handleDelete}
                             class="text-danger hover:bg-surface flex w-full items-center gap-2 px-3 py-2 text-left text-sm"
                         >
-                            🗑 Eliminar
+                            🗑 Delete
                         </button>
                     </div>
                 </>

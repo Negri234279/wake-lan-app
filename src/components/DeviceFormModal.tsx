@@ -15,7 +15,7 @@ interface Props {
 export function DeviceFormModal({ device, onSubmit, onClose }: Props) {
     const form = useDeviceForm(device)
     const action = useAsyncAction()
-    const title = device ? 'Editar equipo' : 'Añadir equipo'
+    const title = device ? 'Edit device' : 'Add device'
 
     const handleSubmit = async (event: Event) => {
         event.preventDefault()
@@ -39,13 +39,13 @@ export function DeviceFormModal({ device, onSubmit, onClose }: Props) {
         <Modal title={title} onClose={onClose}>
             <div class="flex items-center justify-between">
                 <h2 class="text-lg font-semibold">{title}</h2>
-                <button onClick={onClose} aria-label="Cerrar" class="text-text-muted hover:text-text text-lg">
+                <button onClick={onClose} aria-label="Close" class="text-text-muted hover:text-text text-lg">
                     ✕
                 </button>
             </div>
 
             <form onSubmit={handleSubmit} class="mt-4 flex flex-col gap-4" noValidate>
-                <FormField label="Nombre" htmlFor="device-name" required error={form.errors.name}>
+                <FormField label="Name" htmlFor="device-name" required error={form.errors.name}>
                     <input
                         id="device-name"
                         value={form.values.name}
@@ -55,10 +55,10 @@ export function DeviceFormModal({ device, onSubmit, onClose }: Props) {
                 </FormField>
 
                 <FormField
-                    label="Dirección MAC"
+                    label="MAC address"
                     htmlFor="device-mac"
                     required
-                    hint="Formato: AA:BB:CC:DD:EE:FF"
+                    hint="Format: AA:BB:CC:DD:EE:FF"
                     error={form.errors.mac}
                 >
                     <input
@@ -70,9 +70,9 @@ export function DeviceFormModal({ device, onSubmit, onClose }: Props) {
                 </FormField>
 
                 <FormField
-                    label="Dirección IP (opcional)"
+                    label="IP address (optional)"
                     htmlFor="device-ip"
-                    hint="Se usa para comprobar el estado del equipo."
+                    hint="Used to check the device status."
                     error={form.errors.ip}
                 >
                     <input
@@ -85,7 +85,7 @@ export function DeviceFormModal({ device, onSubmit, onClose }: Props) {
 
                 {action.error && (
                     <p class="text-danger text-sm" role="alert">
-                        ⚠ No se pudo guardar el equipo.
+                        ⚠ Couldn't save the device.
                     </p>
                 )}
 
@@ -95,14 +95,14 @@ export function DeviceFormModal({ device, onSubmit, onClose }: Props) {
                         onClick={onClose}
                         class="border-border text-text-muted hover:text-text rounded-lg border px-4 py-2 text-sm transition"
                     >
-                        Cancelar
+                        Cancel
                     </button>
                     <button
                         type="submit"
                         disabled={action.pending}
                         class="border-on/40 bg-on/10 text-on hover:bg-on/20 rounded-lg border px-4 py-2 text-sm font-medium transition disabled:opacity-60"
                     >
-                        {action.pending ? '⟳ Guardando…' : 'Guardar'}
+                        {action.pending ? '⟳ Saving…' : 'Save'}
                     </button>
                 </div>
             </form>

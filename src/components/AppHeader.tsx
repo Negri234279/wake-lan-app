@@ -18,13 +18,13 @@ export function AppHeader({ onRefresh, onAdd, isRefreshing }: Props) {
                     disabled={isRefreshing}
                     class="border-border bg-surface text-text-muted hover:text-text hover:border-text-muted rounded-lg border px-3 py-2 text-sm transition disabled:opacity-60"
                 >
-                    {isRefreshing ? '⟳ Actualizando…' : '⟳ Refrescar'}
+                    {isRefreshing ? '⟳ Refreshing…' : '⟳ Refresh'}
                 </button>
                 <button
                     onClick={onAdd}
                     class="border-on/40 bg-on/10 text-on hover:bg-on/20 hover:shadow-glow-on rounded-lg border px-3 py-2 text-sm font-medium transition"
                 >
-                    + Añadir equipo
+                    + Add device
                 </button>
             </div>
         </header>

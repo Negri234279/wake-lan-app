@@ -5,7 +5,7 @@ export class ValidationError extends Error {
     readonly fields: FieldErrors
 
     constructor(fields: FieldErrors) {
-        super('Datos de equipo inválidos')
+        super('Invalid device data')
         this.name = 'ValidationError'
         this.fields = fields
     }

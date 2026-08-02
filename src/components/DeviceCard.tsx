@@ -29,10 +29,10 @@ export function DeviceCard({ device, status, bootElapsed, onWake, onEdit, onDele
             </div>
 
             <h3 class="text-text mt-3 text-base font-semibold">{device.name}</h3>
-            <p class="text-text-muted mt-0.5 font-mono text-sm">{device.ip ?? 'Sin IP'}</p>
+            <p class="text-text-muted mt-0.5 font-mono text-sm">{device.ip ?? 'No IP'}</p>
 
             {isBooting ? (
-                <p class="text-boot mt-0.5 font-mono text-xs">Paquete enviado · {bootElapsed} · esperando</p>
+                <p class="text-boot mt-0.5 font-mono text-xs">Packet sent · {bootElapsed} · waiting</p>
             ) : (
                 <p class="text-text-muted/60 mt-0.5 font-mono text-xs">{device.mac}</p>
             )}
@@ -41,7 +41,7 @@ export function DeviceCard({ device, status, bootElapsed, onWake, onEdit, onDele
                 <WakeButton status={status} onWake={onWake} />
             </div>
 
-            {isUnknown && <p class="text-unknown mt-2 text-xs">No se puede comprobar el estado</p>}
+            {isUnknown && <p class="text-unknown mt-2 text-xs">Status can't be checked</p>}
         </article>
     )
 }

@@ -49,7 +49,7 @@ export function useStatusPolling(devices: Device[]) {
         const results = await Promise.all(list.map((device) => pollOne(device.id)))
 
         setChecking(false)
-        
+
         setFailed(results.every((ok) => !ok))
     }, [pollOne])
 

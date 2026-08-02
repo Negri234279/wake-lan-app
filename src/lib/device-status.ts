@@ -24,31 +24,31 @@ export interface StatusMeta {
  */
 export const STATUS_META: Record<DeviceStatus, StatusMeta> = {
     encendido: {
-        label: 'Encendido',
+        label: 'On',
         glyph: '●',
         color: 'text-on',
         glow: 'shadow-glow-on border-transparent',
     },
     apagado: {
-        label: 'Apagado',
+        label: 'Off',
         glyph: '○',
         color: 'text-off',
         glow: 'border-border',
     },
     comprobando: {
-        label: 'Comprobando',
+        label: 'Checking',
         glyph: '~',
         color: 'text-checking',
         glow: 'glow-checking border-transparent',
     },
     arrancando: {
-        label: 'Arrancando',
+        label: 'Booting',
         glyph: '⚡',
         color: 'text-boot',
         glow: 'shadow-glow-boot border-transparent',
     },
     desconocido: {
-        label: 'Desconocido',
+        label: 'Unknown',
         glyph: '⊘',
         color: 'text-unknown',
         glow: 'border-border opacity-90',

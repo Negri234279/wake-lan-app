@@ -17,7 +17,7 @@ export function WakeButton({ status, onWake }: Props) {
                 aria-disabled="true"
                 class="border-on/30 bg-on/5 text-on/70 w-full cursor-default rounded-lg border px-4 py-2 text-sm font-medium"
             >
-                ✓ Encendido
+                ✓ On
             </button>
         )
     }
@@ -28,7 +28,7 @@ export function WakeButton({ status, onWake }: Props) {
                 onClick={onWake}
                 class="border-border text-text-muted hover:text-text w-full rounded-lg border px-4 py-2 text-sm transition"
             >
-                Reintentar
+                Retry
             </button>
         )
     }
@@ -38,7 +38,7 @@ export function WakeButton({ status, onWake }: Props) {
             onClick={onWake}
             class="border-boot/40 bg-boot/10 text-boot hover:bg-boot/20 hover:shadow-glow-boot w-full rounded-lg border px-4 py-2 text-sm font-medium transition"
         >
-            ⚡ Encender
+            ⚡ Wake
         </button>
     )
 }

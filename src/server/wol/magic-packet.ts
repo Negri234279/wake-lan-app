@@ -10,7 +10,7 @@ const MAC_REPEAT = 16
 export function buildMagicPacket(mac: string): Buffer {
     const normalized = normalizeMac(mac)
     if (!normalized) {
-        throw new Error(`MAC inválida: ${mac}`)
+        throw new Error(`Invalid MAC: ${mac}`)
     }
 
     const sync = Buffer.alloc(SYNC_STREAM_BYTES, 0xff)

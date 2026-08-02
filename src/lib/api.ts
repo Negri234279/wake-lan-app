@@ -40,7 +40,7 @@ async function request<T>(url: string, init: RequestInit = {}): Promise<T> {
 async function toApiError(response: Response): Promise<ApiError> {
     const body = await safeJson(response)
 
-    return new ApiError(body?.error ?? 'Error de red', response.status, body?.fields)
+    return new ApiError(body?.error ?? 'Network error', response.status, body?.fields)
 }
 
 async function safeJson(response: Response): Promise<ApiErrorBody | null> {

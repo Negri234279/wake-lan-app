@@ -26,7 +26,7 @@ export function validateDeviceInput(input: DeviceInput): ValidationResult {
 
     const name = (input.name ?? '').trim()
     if (!name) {
-        errors.name = 'Introduce un nombre.'
+        errors.name = 'Enter a name.'
     }
 
     const mac = resolveMac(input.mac, errors)
@@ -46,14 +46,14 @@ export function validateDeviceInput(input: DeviceInput): ValidationResult {
 function resolveMac(rawMac: DeviceInput['mac'], errors: FieldErrors): string | null {
     const value = (rawMac ?? '').trim()
     if (!value) {
-        errors.mac = 'Introduce la dirección MAC.'
+        errors.mac = 'Enter the MAC address.'
 
         return null
     }
 
     const mac = normalizeMac(value)
     if (!mac) {
-        errors.mac = 'MAC inválida. Usa el formato AA:BB:CC:DD:EE:FF.'
+        errors.mac = 'Invalid MAC. Use the format AA:BB:CC:DD:EE:FF.'
     }
 
     return mac
@@ -64,7 +64,7 @@ function resolveIp(rawIp: DeviceInput['ip'], errors: FieldErrors): string | unde
     if (!value) return undefined
 
     if (!isValidIpv4(value)) {
-        errors.ip = 'IP inválida. Usa el formato 192.168.1.10.'
+        errors.ip = 'Invalid IP. Use the format 192.168.1.10.'
 
         return undefined
     }

@@ -57,15 +57,15 @@ function collectErrors(values: DeviceFormValues): FieldErrors {
     const errors: FieldErrors = {}
 
     if (!values.name.trim()) {
-        errors.name = 'Introduce un nombre.'
+        errors.name = 'Enter a name.'
     }
 
     if (!normalizeMac(values.mac)) {
-        errors.mac = 'MAC inválida. Usa el formato AA:BB:CC:DD:EE:FF.'
+        errors.mac = 'Invalid MAC. Use the format AA:BB:CC:DD:EE:FF.'
     }
 
     if (values.ip.trim() && !isValidIpv4(values.ip.trim())) {
-        errors.ip = 'IP inválida. Usa el formato 192.168.1.10.'
+        errors.ip = 'Invalid IP. Use the format 192.168.1.10.'
     }
 
     return errors

@@ -12,7 +12,7 @@ export function ErrorBanner({ message, onRetry }: Props) {
         >
             <span>⚠ {message}</span>
             <button onClick={onRetry} class="hover:text-text shrink-0 underline">
-                Reintentar
+                Retry
             </button>
         </div>
     )

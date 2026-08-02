@@ -49,11 +49,11 @@ export function Dashboard({ initialDevices }: Props) {
     const handleWake = async (device: Device) => {
         try {
             await wakeDevice(device.id)
-            toasts.notify('success', `Magic packet enviado a ${device.name}`)
+            toasts.notify('success', `Magic packet sent to ${device.name}`)
             wake.startBooting(device.id)
             polling.poll()
         } catch {
-            toasts.notify('error', `No se pudo encender ${device.name}`)
+            toasts.notify('error', `Couldn't wake ${device.name}`)
         }
     }
 
@@ -64,19 +64,19 @@ export function Dashboard({ initialDevices }: Props) {
 
     const handleCreate = async (input: DeviceInput) => {
         await devices.create(input)
-        toasts.notify('success', 'Equipo añadido')
+        toasts.notify('success', 'Device added')
         polling.poll()
     }
 
     const handleEditSubmit = (device: Device) => async (input: DeviceInput) => {
         await devices.update(device.id, input)
-        toasts.notify('success', 'Equipo actualizado')
+        toasts.notify('success', 'Device updated')
         polling.poll()
     }
 
     const handleDeleteConfirm = (device: Device) => async () => {
         await devices.remove(device.id)
-        toasts.notify('info', `«${device.name}» eliminado`)
+        toasts.notify('info', `“${device.name}” deleted`)
     }
 
     const onCount = devices.devices.filter((device) => statusFor(device) === 'encendido').length
@@ -92,10 +92,7 @@ export function Dashboard({ initialDevices }: Props) {
             />
 
             {polling.failed && (
-                <ErrorBanner
-                    message="No se pudo contactar con el servidor. Los estados no están actualizados."
-                    onRetry={handleRefresh}
-                />
+                <ErrorBanner message="Couldn't reach the server. Statuses are out of date." onRetry={handleRefresh} />
             )}
 
             <DashboardSummary onCount={onCount} offCount={offCount} checking={polling.checking} />

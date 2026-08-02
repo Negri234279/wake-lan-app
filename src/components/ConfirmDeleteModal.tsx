@@ -18,12 +18,12 @@ export function ConfirmDeleteModal({ deviceName, onConfirm, onClose }: Props) {
     }
 
     return (
-        <Modal title="Eliminar equipo" onClose={onClose}>
-            <h2 class="text-lg font-semibold">Eliminar equipo</h2>
+        <Modal title="Delete device" onClose={onClose}>
+            <h2 class="text-lg font-semibold">Delete device</h2>
             <p class="text-text mt-3 text-sm">
-                ¿Seguro que quieres eliminar «<span class="font-semibold">{deviceName}</span>»?
+                Are you sure you want to delete “<span class="font-semibold">{deviceName}</span>”?
             </p>
-            <p class="text-text-muted mt-1 text-sm">Esta acción no se puede deshacer.</p>
+            <p class="text-text-muted mt-1 text-sm">This action can't be undone.</p>
 
             {action.error && (
                 <p class="text-danger mt-3 text-sm" role="alert">
@@ -36,14 +36,14 @@ export function ConfirmDeleteModal({ deviceName, onConfirm, onClose }: Props) {
                     onClick={onClose}
                     class="border-border text-text-muted hover:text-text rounded-lg border px-4 py-2 text-sm transition"
                 >
-                    Cancelar
+                    Cancel
                 </button>
                 <button
                     onClick={handleConfirm}
                     disabled={action.pending}
                     class="border-danger/50 bg-danger/10 text-danger hover:bg-danger/20 rounded-lg border px-4 py-2 text-sm font-medium transition disabled:opacity-60"
                 >
-                    {action.pending ? 'Eliminando…' : 'Eliminar'}
+                    {action.pending ? 'Deleting…' : 'Delete'}
                 </button>
             </div>
         </Modal>
