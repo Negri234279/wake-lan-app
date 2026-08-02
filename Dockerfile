@@ -1,5 +1,12 @@
 # syntax=docker/dockerfile:1
 
+# OCI image metadata — populated by CI (docker-publish.yml) at build time.
+ARG VERSION="unknown"
+ARG VCS_REF="unknown"
+ARG VCS_URL="unknown"
+ARG BUILD_DATE="unknown"
+ARG DESCRIPTION="Wake computers on your LAN via Wake-on-LAN, with live TCP/ICMP status detection."
+
 # =========================================================================
 # Base: Node 22 sobre Alpine + iputils (ping ICMP con soporte de -W para el
 # sondeo de estado). El acceso a la red local (WoL / ICMP) exige que el
@@ -32,6 +39,28 @@ ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=4321
 ENV DATA_FILE=/data/devices.json
+
+# Re-declare the metadata ARGs so they're in scope for this stage.
+ARG VERSION
+ARG VCS_REF
+ARG VCS_URL
+ARG BUILD_DATE
+ARG DESCRIPTION
+
+# OCI standard metadata (values injected by CI at build time).
+LABEL org.opencontainers.image.title="wake-lan-app" \
+    org.opencontainers.image.description="${DESCRIPTION}" \
+    org.opencontainers.image.version="${VERSION}" \
+    org.opencontainers.image.revision="${VCS_REF}" \
+    org.opencontainers.image.created="${BUILD_DATE}" \
+    org.opencontainers.image.source="${VCS_URL}" \
+    org.opencontainers.image.url="${VCS_URL}"
+
+# Custom (vendor) metadata, also injected by CI.
+LABEL io.wakelan.app="wake-lan-app" \
+    io.wakelan.component="web" \
+    io.wakelan.commit="${VCS_REF}" \
+    io.wakelan.built-at="${BUILD_DATE}"
 
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist

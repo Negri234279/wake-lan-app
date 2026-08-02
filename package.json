@@ -2,6 +2,7 @@
     "name": "wake-lan-app",
     "type": "module",
     "version": "0.0.1",
+    "description": "Wake computers on your LAN via Wake-on-LAN, with live TCP/ICMP status detection.",
     "engines": {
         "node": ">=22.12.0"
     },
